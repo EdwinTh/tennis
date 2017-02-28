@@ -1,11 +1,11 @@
 Package: tennis
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Data gathered by Jeff Sackmann
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Edwin Thoen
+Maintainer: Edwin Thoen <edwinthoen@gmail.nl>
+Description: A database of all the tennis matches played in the open era (since 1968). These datasets are dilligently gathered Jeff Sackmann, and published on his github account.
+License: Creative commons, fill in properly later
 Encoding: UTF-8
 LazyData: true
+Depends: dplyr
