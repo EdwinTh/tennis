@@ -73,3 +73,23 @@ test_that("find_matchup helper function", {
                            c("Roger Federer", "Rafael Nadal")) %>% nrow, 5)
 
 })
+
+context("tennis_reshape helper functions")
+
+test_that("make_player_perspective helper function", {
+  expect_equal(
+    make_player_perspective(six_matches, "Roger Federer", "won") %>% nrow, 3)
+  expect_equal(
+    make_player_perspective(six_matches, "Roger Federer", "lost") %>% nrow, 3)
+  expect_equal(
+    make_player_perspective(six_matches, c("Roger Federer", "Jan Siemerink"), "won") %>% nrow, 4)
+})
+
+test_that("adjust_columns_won_lost helper function", {
+  pp <- rbind(make_player_perspective(six_matches, "Roger Federer", "won"),
+              make_player_perspective(six_matches, "Roger Federer", "lost"))
+  expect_equal(adjust_columns_won_lost(pp) %>% slice(1:3) %>%
+                 select(player_ht) %>% unlist %>% unname, rep(185, 3))
+  expect_equal(adjust_columns_won_lost(pp) %>% slice(4:6) %>%
+                 select(player_ht) %>% unlist %>% unname, rep(185, 3))
+})
