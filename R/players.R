@@ -79,31 +79,57 @@ get_closest_levenstein <- function(set_a, set_b) {
 }
 
 #' Find a matchup between two or more players
+#'
+#' Find the matches between two or more specific opponents. If only
+#' \code{players_a} is specified all the matches between the players in this
+#' set are returned. If both \code{players_a} and \code{players_b} are
+#' specified all the matched betweena player in set a and a player in set b
+#' are specified.
+#' @param x A data frame from the \code{tennis} package.
+#' @param players_a A character vector.
+#' @param players_a A character vector.
+#' @return A subset of \code{x} with the matchups between the requested players.
+#' @examples
+#' # Find all matches between Nadal, Djokovic, and Federer:
+#' find_matchup(atp_matches, c("Roger Federer", "Rafael Nadal", "Novak Djokovic"))
+#'
+#' Find all matches that Nadal or Federer played against Djokovic or Murray:
+#' a <- c("Roger Federer", "Rafael Nadal"); b <- c("Novak Djokovic", "Andy Murray")
+#' find_matchup(atp_matches, a, b)
+#'
+#' Find all matches that Nadal and layed against Djokovic or Murray and all the
+#' matches they played against each other:
+#' find_matchup(atp_matches, a, c(a, b))
+
+
+
 find_matchup <- function(x, players_a, players_b = players_a) {
-  stopifnot(is.data.frame(x))
-  stopifnot("winner_name" %in% colnames(x))
-  stopifnot("loser_name" %in% colnames(x))
-
-  players_a_low <- tolower(players_a)
-  players_b_low <- tolower(players_b)
-
-  full_set <- dplyr::filter(x,
-    (tolower(winner_name) %in% players_a_low &
-       tolower(loser_name) %in% players_b_low) |
-    (tolower(winner_name) %in% players_b_low &
-       tolower(loser_name) %in% players_a_low)
-  )
-
-  all_players_asked <- unique(tolower(c(players_a, players_b)))
-
-  players_not_found <- which_missing(full_set, all_players_asked)
-
+  check_x(x, "both")
+  check_players_a_b(players_a, players_b)
+  full_set <- get_matchup(x, players_a, players_b)
+  players_not_found <- which_missing(full_set, unique(c(players_a, players_b)))
   all_available_players <- c(unique(x$winner_name), unique(x$loser_name))
-
   if (length(players_not_found) > 0) {
-    get_closest_levenstein(tolower(players_not_found),
-                           tolower(all_available_players))}
+    get_closest_levenstein(players_not_found, all_available_players)
+  }
   return(full_set)
+}
+
+check_players_a_b <- function(a, b) {
+  stopifnot(length(a) > 0)
+  stopifnot(length(b) > 0)
+  if ( length(unique(c(a, b))) == 1 ) {
+    stop("Only one player provided, can't make matchup", call. = FALSE)
+  }
+}
+
+get_matchup <- function(x, a, b) {
+  a <- tolower(a); b <- tolower(b)
+  full_set <- dplyr::filter(x,
+                            (tolower(winner_name) %in% a &
+                               tolower(loser_name) %in% b) |
+                              (tolower(winner_name) %in% b &
+                                 tolower(loser_name) %in% a))
 }
 
 #' Reshape the tennis data from the perspective of one player

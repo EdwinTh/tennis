@@ -6,6 +6,10 @@ three_matches <- atp_matches %>%
 six_matches <- rbind(three_matches, atp_matches %>%
                       filter(loser_name == "Roger Federer") %>% slice(1:3) )
 
+atp_matches %>% filter(winner_name %in% c("Roger Federer", "Rafael Nadal"),
+                       loser_name %in% c("Roger Federer", "Rafael Nadal"),
+                       substr(tourney_date, 1, 4) == "2007")
+
 context("find_players helper function")
 test_that("check_x filters out wrong inputs",{
   expect_silent(check_x(three_matches, "both"))
@@ -49,4 +53,23 @@ test_that("get_closest_levenstein function", {
   a <- "Roger Federe"; b <- c("Roger Federer", "Rafael Nadal")
   expect_warning(get_closest_levenstein(a, b),
                  "Could not find Roger Federe, did you mean Roger Federer?")
+})
+
+
+context("find_matchups helper functions")
+
+test_that("check_players_a_b helper function", {
+  expect_error(check_players_a_b("Roger Federer", NULL))
+  expect_error(check_players_a_b(NULL, "Roger Federer"))
+  expect_error(check_players_a_b("Roger Federer", "Roger Federer"))
+})
+
+test_that("find_matchup helper function", {
+  expect_equal(get_matchup(six_matches, 'Roger Federer', "Jan Siemerink") %>% nrow, 1)
+  expect_equal(get_matchup(six_matches, 'Roger Federer',
+                           c("Jan Siemerink", "Guillaume Raoux")) %>% nrow, 2)
+  expect_equal(get_matchup(atp_matches %>% filter(substr(tourney_date, 1, 4) == "2007"),
+                           c("Roger Federer", "Rafael Nadal"),
+                           c("Roger Federer", "Rafael Nadal")) %>% nrow, 5)
+
 })
