@@ -10,14 +10,18 @@ read_tennis_data <- function(year,
 }
 
 atp_matches <- purrr::map(1968:2017, read_tennis_data) %>% do.call("rbind", .)
+devtools::use_data(atp_matches)
 
 atp_matches_futures <-
   purrr::map(1991:2017, read_tennis_data, file = "atp_matches_futures") %>%
   do.call("rbind", .)
+devtools::use_data(atp_matches_futures)
 
 atp_matches_qual_chal <-
   purrr::map(1991:2017, read_tennis_data, file = "atp_matches_qual_chall") %>%
   do.call("rbind", .)
+devtools::use_data(atp_matches_qual_chal)
+
 
 atp_players <- readr::read_csv(
   "~/Documents/R_packages/tennis/data_input/tennis_atp/atp_players.csv",

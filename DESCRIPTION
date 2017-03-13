@@ -9,3 +9,4 @@ License: Creative commons, fill in properly later
 Encoding: UTF-8
 LazyData: true
 Depends: dplyr
+Suggests: testthat
