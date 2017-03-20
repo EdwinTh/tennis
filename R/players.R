@@ -11,6 +11,7 @@
 #' @examples
 #' library(dplyr)
 #' atp_matches %>% find_player("roger federer", "Rafael Nadal", "NOVAK DJOKOVIC")
+#' @export
 find_player <- function(x,..., won_lost = c('both', 'won', 'lost')) {
   won_lost <- match.arg(won_lost)
   check_x(x, won_lost)
@@ -98,7 +99,7 @@ get_closest_levenstein <- function(set_a, set_b) {
 #' Find all matches that Nadal and Federe played against Djokovic or Murray
 #' and all the matches they played against each other:
 #' find_matchup(atp_matches, a, c(a, b))
-
+#' @export
 find_matchup <- function(x, players_a, players_b = players_a) {
   check_x(x, "both")
   check_players_a_b(players_a, players_b)
@@ -140,6 +141,7 @@ get_matchup <- function(x, a, b) {
 #' columns \code{winner_name} and \code{loser_name}. All the other columns
 #' containing player information are renamed to either player_ or opponent_
 #' (and p_ or o_) depending to which of the players they belong.
+#' @export
 tennis_reshape <- function(x, ...) {
   check_x(x, "both")
   if (length(as.list(match.call()) == 2)) {
