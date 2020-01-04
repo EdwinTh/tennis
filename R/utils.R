@@ -10,3 +10,8 @@ has_cols <- function(x, ...) {
     stop("Following column not in x: ", not_found[1])
   }
 }
+
+script_and_test <- function(name) {
+  usethis::use_r(name)
+  usethis::use_test(name)
+}
