@@ -1,5 +1,7 @@
 libs <- function() {
   library(tidyverse)
+  library(drake)
+  library(recipes)
 }
 
 has_cols <- function(x, ...) {
